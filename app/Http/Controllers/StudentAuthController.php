@@ -6,12 +6,13 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+class StudentAuthController extends Controller
 {
     // public function login(Request $request){
     //     $credentials = $request->only('email', 'password');
@@ -53,24 +54,23 @@ class AuthController extends Controller
         }
 
      
-        $user = User::where('email', $request->email)->first();
+        $student = Student::where('email', $request->email)->first();
 
-   
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! $student || ! Hash::check($request->password, $student->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         $randomStr = Str::random(40);
-        $token = $user->createToken($randomStr)->plainTextToken;
-      $userID =$user->id;
+        $token = $student->createToken($randomStr)->plainTextToken;
+        $studentID = $student->id;
+        $student = Student::find($studentID);
         return response()->json([
             'token' => $token,
-            'user_id'=>$userID
-             
+            'student_id' => $studentID,
+            'student' => $student
         ], 200);
-      
     }
     public function logout(Request $request){
         Auth::logout();
@@ -78,7 +78,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return response()->json(['message' => 'Logout successful']);    
     }
-    public function user(Request $request){
-        return $request->user();
+    public function student(Request $request){
+        return $request->student();
     }
 }
