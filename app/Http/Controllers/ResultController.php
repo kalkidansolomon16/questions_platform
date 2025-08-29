@@ -8,28 +8,23 @@ use App\Http\Controllers\Controller;
 
 class ResultController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        $results = Result::get();
+        $perPage = request()->query('per_page', 10);
+        $results = Result::with('student')->paginate($perPage);
         return response()->json([
             'result' => $results
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+  
     public function create()
     {
-        //
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -43,9 +38,7 @@ class ResultController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
+   
     public function show(string $id)
     {
         $result = Result::findOrFail($id);
@@ -54,9 +47,7 @@ class ResultController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function edit(string $id)
     {
         //
@@ -90,6 +81,12 @@ class ResultController extends Controller
 
         return response()->json([
             'message' => 'Result deleted successfully'
+        ]);
+    }
+    public function count(){
+        $resultcount = Result::count();
+        return response()->json([
+            'count' => $resultcount
         ]);
     }
 }

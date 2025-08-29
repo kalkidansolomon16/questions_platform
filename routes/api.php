@@ -56,3 +56,4 @@ Route::put('/choices/{id}', [OptionController::class, 'update']);
 Route::delete('/choices/{id}', [OptionController::class, 'destroy']);
 
 Route::get('/questioncount', [QuestionController::class, 'count']);
+Route::get('/resultcount', [ResultController::class, 'count']);
